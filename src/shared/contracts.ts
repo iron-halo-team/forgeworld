@@ -7,8 +7,8 @@ export interface LauncherStaticConfig {
   branding: {
     projectName: string;
     subtitle: string[];
-    supportTitle: string;
-    supportText: string;
+    supportTitle?: string;
+    supportText?: string;
   };
   minecraft: {
     version: string;
@@ -31,7 +31,7 @@ export interface LauncherStaticConfig {
     discord: string;
     wiki: string;
     github: string;
-    support: string;
+    support?: string;
   };
   update: {
     metadataUrl: string;

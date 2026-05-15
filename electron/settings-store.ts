@@ -7,7 +7,7 @@ import type {
 import { getSettingsPath, getUserDataRoot } from './paths';
 
 const settingsPatchSchema = z.object({
-  username: z.string().trim().min(3).max(16).regex(/^[A-Za-z0-9_]+$/).optional(),
+  username: z.string().trim().regex(/^$|^[A-Za-z0-9_]{3,16}$/).optional(),
   allocatedRamMb: z.number().int().min(1024).max(65536).optional(),
   hideLauncherOnGameStart: z.boolean().optional(),
   closeLauncherWhenGameCloses: z.boolean().optional(),
@@ -15,7 +15,7 @@ const settingsPatchSchema = z.object({
 
 function getDefaultSettings(config: LauncherStaticConfig): LauncherSettings {
   return {
-    username: 'Wayfarer',
+    username: '',
     allocatedRamMb: config.minecraft.defaultRamMb,
     hideLauncherOnGameStart: true,
     closeLauncherWhenGameCloses: false,

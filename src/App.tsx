@@ -33,6 +33,7 @@ function getPlayLabel(launchState: LaunchStatePayload) {
 export function App() {
   const [launcher] = useState<LauncherApi>(() => getLauncherApi());
   const [bootstrap, setBootstrap] = useState<LauncherBootstrap | null>(null);
+  const [bootstrapError, setBootstrapError] = useState('');
   const [selectedView, setSelectedView] = useState<SidebarView>('home');
   const [usernameDraft, setUsernameDraft] = useState('');
   const [isBusy, startTransition] = useTransition();
@@ -41,14 +42,24 @@ export function App() {
   useEffect(() => {
     let isMounted = true;
 
-    void launcher.getBootstrap().then((data) => {
-      if (!isMounted) {
-        return;
-      }
+    void launcher.getBootstrap()
+      .then((data) => {
+        if (!isMounted) {
+          return;
+        }
 
-      setBootstrap(data);
-      setUsernameDraft(data.settings.username);
-    });
+        setBootstrap(data);
+        setUsernameDraft(data.settings.username);
+      })
+      .catch((error) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setBootstrapError(error instanceof Error
+          ? error.message
+          : 'Не удалось загрузить данные лаунчера.');
+      });
 
     const unsubscribeLaunch = launcher.onLaunchState((payload) => {
       setBootstrap((current) => current ? {
@@ -82,6 +93,20 @@ export function App() {
       unsubscribeUpdate();
     };
   }, [launcher]);
+
+  if (!bootstrap && bootstrapError) {
+    return (
+      <main className="launcher-shell">
+        <div className="loading-screen">
+          <div className="loading-card">
+            <span className="eyebrow loading-eyebrow">Forge World</span>
+            <h1>Ошибка загрузки</h1>
+            <p>{bootstrapError}</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   if (!bootstrap) {
     return (
@@ -121,10 +146,6 @@ export function App() {
 
   const saveUsername = async () => {
     const normalized = usernameDraft.trim();
-    if (!normalized) {
-      return;
-    }
-
     await saveSettingsPatch({ username: normalized });
     setSelectedView('home');
   };
@@ -133,6 +154,11 @@ export function App() {
     setIsLaunching(true);
 
     try {
+      if (!settings.username.trim()) {
+        setSelectedView('login');
+        throw new Error('Укажите имя игрока во вкладке входа.');
+      }
+
       await launcher.launchGame();
     } catch (error) {
       setIsLaunching(false);
@@ -150,6 +176,7 @@ export function App() {
 
   const playDisabled = !distributionReady
     || isLaunching
+    || !settings.username.trim()
     || launchState.phase === 'launching'
     || launchState.phase === 'syncing'
     || launchState.phase === 'running';

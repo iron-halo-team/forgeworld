@@ -48,6 +48,10 @@ export async function launchMinecraft(options: {
   }
 
   const username = settings.username.trim();
+  if (!username) {
+    throw new Error('Укажите имя игрока во вкладке входа.');
+  }
+
   const uuid = getOfflineUUID(username);
   const auth = offline(username, uuid);
   const bundledJavaPath = getBundledJavaPath(gameRoot);

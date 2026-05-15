@@ -32,8 +32,8 @@
     "github": "https://github.com/iron-halo-team/forgeworld"
   },
   "update": {
-    "metadataUrl": "https://example.com/forge-world/update.json",
-    "downloadPage": "https://example.com/forge-world/download"
+    "metadataUrl": "https://raw.githubusercontent.com/iron-halo-team/forgeworld/main/updates/metadata.json",
+    "downloadPage": "https://github.com/iron-halo-team/forgeworld/blob/main/updates/download.md"
   },
   "preserveOnUpdate": [
     "options.txt",

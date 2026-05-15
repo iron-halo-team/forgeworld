@@ -17,8 +17,8 @@ const staticConfigSchema = z.object({
   branding: z.object({
     projectName: z.string(),
     subtitle: z.array(z.string()).min(1),
-    supportTitle: z.string(),
-    supportText: z.string(),
+    supportTitle: z.string().optional(),
+    supportText: z.string().optional(),
   }),
   minecraft: z.object({
     version: z.string(),
@@ -41,7 +41,7 @@ const staticConfigSchema = z.object({
     discord: z.string().url(),
     wiki: z.string().url(),
     github: z.string().url(),
-    support: z.string().url(),
+    support: z.string().url().optional(),
   }),
   update: z.object({
     metadataUrl: z.string().url(),

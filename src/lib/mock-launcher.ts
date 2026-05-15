@@ -125,7 +125,7 @@ const mockContent = {
 };
 
 let mockSettings: LauncherSettings = {
-  username: 'Wayfarer',
+  username: '',
   allocatedRamMb: 6144,
   hideLauncherOnGameStart: true,
   closeLauncherWhenGameCloses: false,
